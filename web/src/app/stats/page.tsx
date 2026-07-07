@@ -67,7 +67,7 @@ export default function StatsPage() {
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-white/10">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-500"
+                  className="h-full rounded-full bg-gradient-to-r from-teal-500 to-teal-400"
                   style={{
                     width: `${stats.total_papers ? (stats.pubmed_count / stats.total_papers) * 100 : 0}%`,
                   }}
@@ -81,7 +81,7 @@ export default function StatsPage() {
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-white/10">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-pink-500"
+                  className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-teal-400"
                   style={{
                     width: `${stats.total_papers ? (stats.s2_count / stats.total_papers) * 100 : 0}%`,
                   }}

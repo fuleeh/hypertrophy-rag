@@ -21,7 +21,7 @@ export default function Home() {
         </p>
         <a
           href="/query"
-          className="mt-8 inline-flex h-12 items-center rounded-lg bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 px-8 text-base font-medium text-white transition-all duration-300 hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] hover:-translate-y-0.5"
+          className="mt-8 inline-flex h-12 items-center rounded-lg bg-gradient-to-r from-teal-500 via-teal-500 to-cyan-500 px-8 text-base font-medium text-white transition-all duration-300 hover:shadow-[0_0_30px_rgba(20,184,166,0.4)] hover:-translate-y-0.5"
         >
           Ask a Question
           <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

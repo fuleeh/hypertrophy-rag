@@ -8,8 +8,8 @@
   --color-border: rgba(255, 255, 255, 0.1);
   --color-border-hover: rgba(255, 255, 255, 0.2);
   --color-muted: #a1a1aa;
-  --color-accent: #8b5cf6;
-  --color-accent-hover: #7c3aed;
+  --color-accent: #14b8a6;
+  --color-accent-hover: #0d9488;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
@@ -35,7 +35,7 @@ body {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #a78bfa, #c084fc, #e879f9);
+  background: linear-gradient(135deg, #2dd4bf, #06b6d4, #22d3ee);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -43,11 +43,11 @@ body {
 
 /* Gradient button */
 .btn-gradient {
-  background: linear-gradient(135deg, #7c3aed, #a855f7, #d946ef);
+  background: linear-gradient(135deg, #0d9488, #14b8a6, #06b6d4);
   transition: all 0.3s ease;
 }
 .btn-gradient:hover {
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 30px rgba(20, 184, 166, 0.4);
   transform: translateY(-1px);
 }
 
@@ -58,7 +58,7 @@ body {
 }
 .card-glow:hover {
   border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 40px rgba(139, 92, 246, 0.08);
+  box-shadow: 0 0 40px rgba(20, 184, 166, 0.08);
 }
 
 /* Scrollbar */
@@ -87,7 +87,7 @@ body {
 /* Focus ring */
 input:focus, textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.5);
 }
 
 /* Markdown-like answer styling */
