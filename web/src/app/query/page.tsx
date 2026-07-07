@@ -12,7 +12,7 @@ export default function QueryPage() {
   return (
     <div className="relative z-10 mx-auto max-w-4xl px-6 py-12">
       <div className="mb-8">
-        <div className="font-mono text-sm text-accent mb-4">// query</div>
+        <div className="font-mono text-sm text-accent mb-4">{"// query"}</div>
         <h1 className="text-3xl font-bold text-text md:text-4xl">Ask the Research</h1>
         <p className="mt-2 text-text-muted">
           Get evidence-based answers from peer-reviewed hypertrophy studies
@@ -56,7 +56,7 @@ export default function QueryPage() {
           <AnswerPanel result={result} onFollowUp={search} />
 
           <div>
-            <div className="font-mono text-xs text-text-muted mb-4">// studies</div>
+            <div className="font-mono text-xs text-text-muted mb-4">{"// studies"}</div>
             <div className="space-y-3">
               {result.studies.map((study, i) => (
                 <StudyCard key={study.pmid || study.s2_id || i} study={study} index={i + 1} />

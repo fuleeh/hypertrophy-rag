@@ -27,7 +27,7 @@ export default function StatsPage() {
   if (!stats) {
     return (
       <div className="relative z-10 mx-auto max-w-4xl px-6 py-12 text-center">
-        <div className="font-mono text-sm text-accent mb-4">// stats</div>
+        <div className="font-mono text-sm text-accent mb-4">{"// stats"}</div>
         <h1 className="text-3xl font-bold text-text">Index Statistics</h1>
         <p className="mt-4 text-text-muted">
           No index found. Run <code className="rounded bg-surface px-2 py-1 font-mono text-xs text-accent border border-border/60">hypertrophy-rag ingest</code> to populate the database.
@@ -38,7 +38,7 @@ export default function StatsPage() {
 
   return (
     <div className="relative z-10 mx-auto max-w-4xl px-6 py-12">
-      <div className="font-mono text-sm text-accent mb-4">// stats</div>
+      <div className="font-mono text-sm text-accent mb-4">{"// stats"}</div>
       <h1 className="text-3xl font-bold text-text md:text-4xl">Index Statistics</h1>
       <p className="mt-2 text-text-muted">Overview of the indexed research database</p>
 

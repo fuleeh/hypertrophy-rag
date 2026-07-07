@@ -2,7 +2,6 @@
 
 @theme inline {
   --color-background: #0a0a0a;
-  --color-foreground: #ededed;
   --color-text: #f4f4f5;
   --color-text-secondary: #d4d4d8;
   --color-text-muted: #71717a;
@@ -10,10 +9,8 @@
   --color-surface-hover: #1a1a1a;
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-hover: rgba(255, 255, 255, 0.15);
-  --color-muted: #71717a;
   --color-accent: #14b8a6;
   --color-accent-hover: #0d9488;
-  --color-accent-muted: rgba(20, 184, 166, 0.15);
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
@@ -27,26 +24,8 @@
 
 body {
   background: var(--color-background);
-  color: var(--color-foreground);
+  color: var(--color-text);
   font-family: var(--font-sans), system-ui, sans-serif;
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #2dd4bf, #06b6d4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Card hover */
-.card-glow {
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-.card-glow:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.02);
 }
 
 /* Scrollbar */
@@ -73,7 +52,7 @@ body {
 }
 
 /* Focus ring */
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
 }
@@ -99,25 +78,4 @@ input:focus, textarea:focus {
 }
 .animate-blink {
   animation: blink 1s step-end infinite;
-}
-
-/* Markdown-like answer styling */
-.answer-content h1, .answer-content h2, .answer-content h3 {
-  font-weight: 700;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-}
-.answer-content p {
-  margin-bottom: 1em;
-  line-height: 1.7;
-}
-.answer-content ul, .answer-content ol {
-  margin-left: 1.5em;
-  margin-bottom: 1em;
-}
-.answer-content li {
-  margin-bottom: 0.25em;
-}
-.answer-content strong {
-  color: var(--color-text);
 }

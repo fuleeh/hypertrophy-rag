@@ -61,7 +61,7 @@ export function Features() {
   return (
     <section className="relative z-10 px-6 py-24">
       <div className="mx-auto max-w-5xl">
-        <div className="font-mono text-sm text-accent mb-4">// features</div>
+        <div className="font-mono text-sm text-accent mb-4">{"// features"}</div>
         <h2 className="text-3xl font-bold text-text md:text-4xl">Built for science-based lifters</h2>
         <p className="mt-3 text-text-muted text-lg">Everything you need to find the evidence</p>
 

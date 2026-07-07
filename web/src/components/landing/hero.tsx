@@ -7,7 +7,7 @@ export function Hero() {
       <div className="mx-auto max-w-5xl flex flex-col-reverse md:flex-row md:items-center md:justify-between gap-12 md:gap-16">
         <div className="flex-1">
           <div className="animate-fade-up font-mono text-sm text-accent">
-            // research
+            {"// research"}
           </div>
 
           <h1 className="animate-fade-up mt-4 text-4xl font-bold tracking-tight text-text sm:text-5xl md:text-6xl lg:text-7xl">
@@ -45,7 +45,7 @@ export function Hero() {
 
         <div className="animate-fade-up flex-shrink-0 hidden md:block">
           <div className="relative h-64 w-64 lg:h-80 lg:w-80">
-            <div className="absolute inset-0 rounded-2xl border border-border bg-surface/50 backdrop-blur-sm flex items-center justify-center">
+            <div className="absolute inset-0 rounded-2xl border border-border/60 bg-surface/50 backdrop-blur-sm flex items-center justify-center">
               <div className="text-center">
                 <div className="text-5xl lg:text-6xl font-bold font-mono text-accent">16k+</div>
                 <div className="mt-2 text-sm text-text-muted">chunks indexed</div>

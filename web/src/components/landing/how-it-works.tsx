@@ -37,7 +37,7 @@ export function HowItWorks() {
   return (
     <section className="relative z-10 px-6 py-24">
       <div className="mx-auto max-w-5xl">
-        <div className="font-mono text-sm text-accent mb-4">// how it works</div>
+        <div className="font-mono text-sm text-accent mb-4">{"// how it works"}</div>
         <h2 className="text-3xl font-bold text-text md:text-4xl">Three steps to evidence-based training</h2>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">

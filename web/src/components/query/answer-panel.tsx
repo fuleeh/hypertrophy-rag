@@ -24,7 +24,7 @@ export function AnswerPanel({ result, onFollowUp }: AnswerPanelProps) {
   return (
     <div className="rounded-lg border border-border/60 bg-surface/60 backdrop-blur-sm p-6">
       <div className="mb-4 flex items-center justify-between">
-        <div className="font-mono text-xs text-accent">// answer</div>
+        <div className="font-mono text-xs text-accent">{"// answer"}</div>
         <Badge variant={confidenceColors[result.confidence] || "muted"}>
           {result.confidence}
         </Badge>

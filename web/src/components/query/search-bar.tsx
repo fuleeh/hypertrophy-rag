@@ -23,7 +23,7 @@ export function SearchBar({ onSearch, isLoading }: SearchBarProps) {
     <form onSubmit={handleSubmit} className="relative">
       <div className="relative">
         <svg
-          className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted"
+          className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -38,13 +38,13 @@ export function SearchBar({ onSearch, isLoading }: SearchBarProps) {
         <Input
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Ask a research question... e.g., How many sets per muscle per week?"
-          className="pl-12 pr-28 h-14 text-base rounded-xl"
+          placeholder="Ask a research question..."
+          className="pl-11 pr-24 h-12 text-sm"
         />
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
-          <Button type="submit" disabled={isLoading || !value.trim()} size="md">
+          <Button type="submit" disabled={isLoading || !value.trim()} size="sm">
             {isLoading ? (
-              <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <svg className="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>

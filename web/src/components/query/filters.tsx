@@ -15,7 +15,7 @@ export function Filters({ year, source, onYearChange, onSourceChange }: FiltersP
         <select
           value={year || ""}
           onChange={(e) => onYearChange(e.target.value ? Number(e.target.value) : undefined)}
-          className="rounded-lg border border-border/60 bg-surface/60 px-3 py-1.5 text-xs text-text-secondary hover:border-border-hover transition-colors"
+          className="appearance-none rounded-lg border border-border/60 bg-surface/60 px-3 py-1.5 pr-8 text-xs text-text-secondary hover:border-border-hover focus:border-accent focus:ring-0 transition-colors"
         >
           <option value="">any</option>
           <option value="2024">2024+</option>
@@ -31,7 +31,7 @@ export function Filters({ year, source, onYearChange, onSourceChange }: FiltersP
         <select
           value={source || ""}
           onChange={(e) => onSourceChange(e.target.value || undefined)}
-          className="rounded-lg border border-border/60 bg-surface/60 px-3 py-1.5 text-xs text-text-secondary hover:border-border-hover transition-colors"
+          className="appearance-none rounded-lg border border-border/60 bg-surface/60 px-3 py-1.5 pr-8 text-xs text-text-secondary hover:border-border-hover focus:border-accent focus:ring-0 transition-colors"
         >
           <option value="">all sources</option>
           <option value="pubmed">PubMed</option>

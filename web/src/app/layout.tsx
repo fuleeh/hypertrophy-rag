@@ -16,9 +16,39 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "HypertroHub — Evidence-Based Hypertrophy Research",
-  description: "Ask any training question. Get answers backed by peer-reviewed studies with real citations.",
+  title: {
+    default: "HypertroHub — Evidence-Based Hypertrophy Research",
+    template: "%s | HypertroHub",
+  },
+  description:
+    "Ask any training question. Get answers backed by peer-reviewed studies with real citations, sample sizes, and key findings.",
+  metadataBase: new URL(BASE_URL),
+  openGraph: {
+    title: "HypertroHub — Evidence-Based Hypertrophy Research",
+    description:
+      "Ask any training question. Get answers backed by peer-reviewed studies with real citations, sample sizes, and key findings.",
+    url: BASE_URL,
+    siteName: "HypertroHub",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HypertroHub — Evidence-Based Hypertrophy Research",
+    description:
+      "Ask any training question. Get answers backed by peer-reviewed studies with real citations, sample sizes, and key findings.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +61,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col bg-background text-text">
         <Providers>
           <BackgroundEffects />
           <Navbar />
