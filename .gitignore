@@ -1,0 +1,51 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+
+# Data (cached papers + ChromaDB index — regenerate with `hypertrophy-rag ingest`)
+data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Next.js
+web/.next/
+web/node_modules/
+web/.env.local
+web/out/
+
+# Internal docs (not for public repo)
+ROADMAP.md
+HOW IT WORKS.md
+AI-ENGINEERING-ROADMAP.md
+
+# Docker
+.dockerignore

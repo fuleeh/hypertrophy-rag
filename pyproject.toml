@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hypertrophy-rag"
+version = "0.1.0"
+description = "RAG agent for hypertrophy research — PubMed + Semantic Scholar + Groq LLM"
+requires-python = ">=3.11"
+dependencies = [
+    "groq>=0.15.0",
+    "chromadb>=0.5.0",
+    "requests>=2.31.0",
+    "pyyaml>=6.0",
+    "typer>=0.12.0",
+    "lxml>=5.0.0",
+    "python-dotenv>=1.0.0",
+    "semanticscholar>=0.8.0",
+    "rich>=13.0.0",
+    "langchain>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-chroma>=0.2.0",
+    "langchain-groq>=0.2.0",
+    "rank-bm25>=0.2.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ragas>=0.2.0",
+]
+
+[project.scripts]
+hypertrophy-rag = "hypertrophy_rag.main:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
