@@ -9,8 +9,16 @@ from hypertrophy_rag.models import Chunk, Paper
 # Patterns for extracting quantitative findings
 FINDING_PATTERNS = [
     # Percentage changes: "increased by 25%", "30% greater"
-    re.compile(r"(?:increased|decreased|greater|lower|more|less|higher|reduced)\s+(?:by\s+)?(\d+(?:\.\d+)?)\s*%", re.IGNORECASE),
-    re.compile(r"(\d+(?:\.\d+)?)\s*%\s+(?:greater|higher|lower|more|less|increase|decrease|improvement|reduction)", re.IGNORECASE),
+    re.compile(
+        r"(?:increased|decreased|greater|lower|more|less|higher|reduced)"
+        r"\s+(?:by\s+)?(\d+(?:\.\d+)?)\s*%",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"(\d+(?:\.\d+)?)\s*%\s+"
+        r"(?:greater|higher|lower|more|less|increase|decrease|improvement|reduction)",
+        re.IGNORECASE,
+    ),
     # P-values: "p < 0.05"
     re.compile(r"p\s*[<>=]+\s*0?\.\d+", re.IGNORECASE),
     # Effect sizes: "d = 0.85"

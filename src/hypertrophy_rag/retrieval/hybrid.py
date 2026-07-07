@@ -2,22 +2,15 @@
 
 from __future__ import annotations
 
-import json
-import os
-import sys
+import re
 import time
-from pathlib import Path
 
 import chromadb
 from rank_bm25 import BM25Okapi
 
 from hypertrophy_rag.logging import get_logger
-from hypertrophy_rag.models import ResearchAnswer, StudySummary
 
 logger = get_logger("hybrid")
-
-# Simple tokenization for BM25
-import re
 
 
 def _tokenize(text: str) -> list[str]:
@@ -187,7 +180,7 @@ class HybridRetriever:
 
         total_ms = (time.perf_counter() - t0) * 1000
         logger.info(
-            f"Hybrid search completed",
+            "Hybrid search completed",
             extra={"extra_data": {
                 "query": query[:100],
                 "bm25_results": len(bm25_results),

@@ -42,7 +42,12 @@ def load_papers(cache_dir: str = "data/papers") -> dict[str, Paper]:
                 if existing_by_doi:
                     # Merge: keep the one with more data
                     existing = papers[existing_by_doi]
-                    if paper.citation_count and (not existing.citation_count or paper.citation_count > existing.citation_count):
+                    has_more_citations = (
+                        paper.citation_count
+                        and (not existing.citation_count
+                             or paper.citation_count > existing.citation_count)
+                    )
+                    if has_more_citations:
                         # S2 has citation count, prefer it for metadata
                         existing.citation_count = paper.citation_count
                         existing.open_access_pdf = paper.open_access_pdf

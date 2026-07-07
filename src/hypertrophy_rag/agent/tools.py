@@ -3,15 +3,14 @@
 from __future__ import annotations
 
 import json
-import math
 import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from hypertrophy_rag.index.vectordb import VectorDB
-from hypertrophy_rag.logging import get_logger
+from hypertrophy_rag.index.vectordb import VectorDB  # noqa: E402
+from hypertrophy_rag.logging import get_logger  # noqa: E402
 
 logger = get_logger("agent.tools")
 
@@ -150,7 +149,11 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "search_studies",
-            "description": "Search the hypertrophy research index for relevant studies. Returns study titles, authors, findings, and metadata.",
+            "description": (
+                "Search the hypertrophy research index "
+                "for relevant studies. Returns study titles, "
+                "authors, findings, and metadata."
+            ),
             "parameters": {
                 "type": "object",
                 "properties": {

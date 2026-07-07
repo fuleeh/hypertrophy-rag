@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 import time
 
@@ -11,13 +10,15 @@ from rich.console import Console
 
 from hypertrophy_rag.index.vectordb import VectorDB
 from hypertrophy_rag.logging import get_logger
-from hypertrophy_rag.models import Chunk, Paper, ResearchAnswer, StudySummary
+from hypertrophy_rag.models import ResearchAnswer, StudySummary
 from hypertrophy_rag.retrieval.guardrails import validate_output
 
 console = Console()
 logger = get_logger("rag")
 
-SYSTEM_PROMPT = """You are a hypertrophy research assistant. Given the retrieved research studies, provide a structured, evidence-based summary.
+SYSTEM_PROMPT = """You are a hypertrophy research assistant. \
+Given the retrieved research studies, provide a structured, \
+evidence-based summary.
 
 For each study:
 - State the key finding with specific statistics (percentages, p-values, sample sizes)
@@ -115,7 +116,7 @@ def query_rag(
     answer_text = response.choices[0].message.content
 
     logger.info(
-        f"RAG pipeline completed",
+        "RAG pipeline completed",
         extra={"extra_data": {
             "question": question[:100],
             "retrieval_ms": round(retrieval_ms, 2),
@@ -174,7 +175,10 @@ def query_rag(
 def _assess_confidence(answer_text: str) -> str:
     """Simple heuristic to assess confidence from the answer text."""
     low_indicators = ["limited evidence", "few studies", "unclear", "insufficient", "mixed evidence"]
-    high_indicators = ["strong evidence", "consistent findings", "meta-analysis", "systematic review", "multiple studies"]
+    high_indicators = [
+        "strong evidence", "consistent findings", "meta-analysis",
+        "systematic review", "multiple studies",
+    ]
 
     text_lower = answer_text.lower()
     low_count = sum(1 for ind in low_indicators if ind in text_lower)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+
 from hypertrophy_rag.logging import get_logger
 from hypertrophy_rag.models import ResearchAnswer
 
@@ -38,9 +39,6 @@ def validate_output(answer: ResearchAnswer) -> ResearchAnswer:
 
     # Check for potential hallucinations - claims without study references
     if answer.studies:
-        study_titles = {s.title.lower() for s in answer.studies if s.title}
-        study_pmids = {s.pmid for s in answer.studies if s.pmid}
-
         # Check if answer references studies not in the retrieved set
         for pattern in HALLUCINATION_PATTERNS:
             matches = re.findall(pattern, answer.answer, re.IGNORECASE)

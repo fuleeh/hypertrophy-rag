@@ -1,9 +1,7 @@
 """Tests for PubMed ingestion."""
 
-from unittest.mock import MagicMock, patch
 
 from hypertrophy_rag.ingestion.pubmed import _build_query, _parse_xml
-
 
 SAMPLE_XML = """<?xml version="1.0" ?>
 <PubmedArticleSet>
@@ -13,8 +11,10 @@ SAMPLE_XML = """<?xml version="1.0" ?>
       <Article>
         <ArticleTitle>Effects of training volume on hypertrophy</ArticleTitle>
         <Abstract>
-          <AbstractText>This study examined the effects of different training volumes on muscle hypertrophy in trained individuals.</AbstractText>
-          <AbstractText Label="BACKGROUND">Resistance training volume is a key variable for muscle growth.</AbstractText>
+          <AbstractText>This study examined the effects of different \
+training volumes on muscle hypertrophy in trained individuals.</AbstractText>
+          <AbstractText Label="BACKGROUND">Resistance training volume \
+is a key variable for muscle growth.</AbstractText>
         </Abstract>
         <AuthorList>
           <Author>

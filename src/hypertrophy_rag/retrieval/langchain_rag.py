@@ -4,14 +4,13 @@ from __future__ import annotations
 
 import os
 import time
-from pathlib import Path
 
 import chromadb
 import requests as http_requests
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from langchain_chroma import Chroma
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
 from langchain_groq import ChatGroq
 
 from hypertrophy_rag.logging import get_logger
@@ -19,7 +18,9 @@ from hypertrophy_rag.models import ResearchAnswer, StudySummary
 
 logger = get_logger("langchain_rag")
 
-SYSTEM_PROMPT = """You are a hypertrophy research assistant. Given the retrieved research studies below, provide a structured, evidence-based summary.
+SYSTEM_PROMPT = """You are a hypertrophy research assistant. \
+Given the retrieved research studies below, provide a structured, \
+evidence-based summary.
 
 For each study:
 - State the key finding with specific statistics (percentages, p-values, sample sizes)
@@ -72,7 +73,10 @@ def _get_embeddings():
 def _assess_confidence(answer_text: str) -> str:
     """Simple heuristic to assess confidence from the answer text."""
     low_indicators = ["limited evidence", "few studies", "unclear", "insufficient", "mixed evidence"]
-    high_indicators = ["strong evidence", "consistent findings", "meta-analysis", "systematic review", "multiple studies"]
+    high_indicators = [
+        "strong evidence", "consistent findings", "meta-analysis",
+        "systematic review", "multiple studies",
+    ]
     text_lower = answer_text.lower()
     low_count = sum(1 for ind in low_indicators if ind in text_lower)
     high_count = sum(1 for ind in high_indicators if ind in text_lower)
@@ -168,7 +172,7 @@ def build_langchain_rag(
 
     total_ms = (time.perf_counter() - t0) * 1000
     logger.info(
-        f"LangChain RAG completed",
+        "LangChain RAG completed",
         extra={"extra_data": {
             "question": question[:100],
             "chain_ms": round(chain_ms, 2),

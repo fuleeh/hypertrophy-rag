@@ -8,13 +8,15 @@ import time
 
 from groq import Groq
 
-from hypertrophy_rag.agent.tools import TOOLS, TOOL_MAP, search_studies, get_paper_details, calculate_volume
+from hypertrophy_rag.agent.tools import TOOL_MAP, TOOLS
 from hypertrophy_rag.logging import get_logger
 from hypertrophy_rag.models import ResearchAnswer, StudySummary
 
 logger = get_logger("agent")
 
-AGENT_SYSTEM_PROMPT = """You are HypertroHub, an expert hypertrophy research assistant. You have access to tools that let you search a research database, look up specific papers, and calculate training volume.
+AGENT_SYSTEM_PROMPT = """You are HypertroHub, an expert hypertrophy research assistant. \
+You have access to tools that let you search a research database, \
+look up specific papers, and calculate training volume.
 
 When answering questions:
 1. Use the search_studies tool to find relevant research
@@ -121,7 +123,7 @@ def run_agent(
 
             total_ms = (time.perf_counter() - t0) * 1000
             logger.info(
-                f"Agent completed",
+                "Agent completed",
                 extra={"extra_data": {
                     "question": question[:100],
                     "iterations": iteration,
@@ -169,7 +171,11 @@ def run_agent(
     # Max iterations reached
     return ResearchAnswer(
         question=question,
-        answer="I've gathered as much information as possible, but couldn't complete the analysis within the allowed iterations. Please try rephrasing your question.",
+        answer=(
+            "I've gathered as much information as possible, but couldn't "
+            "complete the analysis within the allowed iterations. "
+            "Please try rephrasing your question."
+        ),
         confidence="low",
     )
 
@@ -177,7 +183,10 @@ def run_agent(
 def _assess_confidence(answer_text: str) -> str:
     """Simple heuristic to assess confidence from the answer text."""
     low_indicators = ["limited evidence", "few studies", "unclear", "insufficient", "mixed evidence"]
-    high_indicators = ["strong evidence", "consistent findings", "meta-analysis", "systematic review", "multiple studies"]
+    high_indicators = [
+        "strong evidence", "consistent findings", "meta-analysis",
+        "systematic review", "multiple studies",
+    ]
     text_lower = answer_text.lower()
     low_count = sum(1 for ind in low_indicators if ind in text_lower)
     high_count = sum(1 for ind in high_indicators if ind in text_lower)
