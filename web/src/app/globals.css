@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #0a0a0a;
+  --color-foreground: #ededed;
+  --color-surface: #111111;
+  --color-surface-hover: #1a1a1a;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-hover: rgba(255, 255, 255, 0.2);
+  --color-muted: #a1a1aa;
+  --color-accent: #8b5cf6;
+  --color-accent-hover: #7c3aed;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Dot pattern background */
+.dot-pattern {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #a78bfa, #c084fc, #e879f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient button */
+.btn-gradient {
+  background: linear-gradient(135deg, #7c3aed, #a855f7, #d946ef);
+  transition: all 0.3s ease;
+}
+.btn-gradient:hover {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Card glow on hover */
+.card-glow {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.card-glow:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.08);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Glow orb */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+/* Focus ring */
+input:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
+}
+
+/* Markdown-like answer styling */
+.answer-content h1, .answer-content h2, .answer-content h3 {
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+.answer-content p {
+  margin-bottom: 1em;
+  line-height: 1.7;
+}
+.answer-content ul, .answer-content ol {
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+.answer-content li {
+  margin-bottom: 0.25em;
+}
+.answer-content strong {
+  color: #e4e4e7;
+}
