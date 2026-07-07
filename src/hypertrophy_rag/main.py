@@ -3,48 +3,21 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import typer
-import yaml
 from dotenv import load_dotenv
 from rich.console import Console
 from rich.table import Table
 
 load_dotenv()
 
+from hypertrophy_rag.config import get_llm, get_vectordb, load_config  # noqa: E402
+
 app = typer.Typer(
     name="hypertrophy-rag",
     help="Hypertrophy Research RAG Agent — PubMed + Semantic Scholar + Groq LLM",
 )
 console = Console()
-
-CONFIG_PATH = Path(__file__).parent.parent.parent / "config.yaml"
-
-
-def _load_config() -> dict:
-    """Load config.yaml."""
-    if CONFIG_PATH.exists():
-        return yaml.safe_load(CONFIG_PATH.read_text())
-    return {}
-
-
-def _get_vectordb():
-    """Initialize the vector DB."""
-    from hypertrophy_rag.index.vectordb import VectorDB
-
-    config = _load_config()
-    chroma_config = config.get("chroma", {})
-    return VectorDB(
-        collection_name=chroma_config.get("collection_name", "hypertrophy_papers"),
-        persist_directory=chroma_config.get("persist_directory", "data/chroma"),
-    )
-
-
-def _get_llm():
-    """Initialize the LLM provider."""
-    from hypertrophy_rag.retrieval.providers import GroqLLM
-    return GroqLLM()
 
 
 @app.command()
@@ -55,8 +28,8 @@ def ingest(
     reindex: bool = typer.Option(False, help="Clear index and re-index everything"),
 ):
     """Ingest papers from PubMed and/or Semantic Scholar."""
-    config = _load_config()
-    db = _get_vectordb()
+    config = load_config()
+    db = get_vectordb()
 
     if reindex:
         console.print("[yellow]Clearing existing index...[/yellow]")
@@ -124,8 +97,8 @@ def query(
     """Ask a research question about hypertrophy."""
     from hypertrophy_rag.retrieval.rag import query_rag
 
-    db = _get_vectordb()
-    llm = _get_llm()
+    db = get_vectordb()
+    llm = get_llm()
 
     stats = db.get_stats()
     if stats["total_chunks"] == 0:
@@ -217,7 +190,7 @@ def stats():
     """Show index statistics."""
     from hypertrophy_rag.ingestion.parser import load_papers
 
-    db = _get_vectordb()
+    db = get_vectordb()
     index_stats = db.get_stats()
     papers = load_papers()
 
@@ -259,7 +232,7 @@ def stats():
 @app.command()
 def list_topics():
     """List available ingestion topics from config."""
-    config = _load_config()
+    config = load_config()
 
     console.print("\n[bold]PubMed Topics (MeSH-based):[/bold]")
     for q in config.get("search_queries", []):

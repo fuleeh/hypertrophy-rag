@@ -13,6 +13,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_groq import ChatGroq
 
+from hypertrophy_rag.config import load_config
 from hypertrophy_rag.logging import get_logger
 from hypertrophy_rag.models import ResearchAnswer
 from hypertrophy_rag.retrieval.context import metadata_to_studies
@@ -26,12 +27,12 @@ def _get_embeddings():
     """Get Groq embeddings via custom wrapper for ChromaDB compatibility."""
 
     class GroqEmbeddings:
-        """Wrapper to use Groq's nomic-embed-text via ChromaDB interface."""
+        """Wrapper to use Groq embeddings via ChromaDB interface."""
 
-        def __init__(self, model: str = "nomic-embed-text-v1.5"):
+        def __init__(self, model: str, api_url: str):
             self.model = model
             self.api_key = os.environ.get("GROQ_API_KEY", "")
-            self.api_url = "https://api.groq.com/openai/v1/embeddings"
+            self.api_url = api_url
 
         def embed_documents(self, texts: list[str]) -> list[list[float]]:
             resp = http_requests.post(
@@ -45,14 +46,19 @@ def _get_embeddings():
         def embed_query(self, text: str) -> list[float]:
             return self.embed_documents([text])[0]
 
-    return GroqEmbeddings()
+    config = load_config()
+    emb_config = config.get("embedding", {})
+    return GroqEmbeddings(
+        model=emb_config.get("model", "nomic-embed-text-v1.5"),
+        api_url=emb_config.get("api_url", "https://api.groq.com/openai/v1/embeddings"),
+    )
 
 
 def build_langchain_rag(
     question: str,
     persist_directory: str = "data/chroma",
     collection_name: str = "hypertrophy_papers",
-    model: str = "llama-3.3-70b-versatile",
+    model: str = "",
     top_k: int = 8,
 ) -> ResearchAnswer:
     """Run a RAG query using LangChain components and return structured results."""
@@ -66,7 +72,13 @@ def build_langchain_rag(
             confidence="low",
         )
 
-    llm = ChatGroq(groq_api_key=groq_key, model=model, temperature=0.3, max_tokens=2048)
+    config = load_config()
+    llm_config = config.get("llm", {})
+    resolved_model = model or llm_config.get("model", "llama-3.3-70b-versatile")
+    temperature = llm_config.get("temperature", 0.3)
+    max_tokens = llm_config.get("max_tokens", 2048)
+
+    llm = ChatGroq(groq_api_key=groq_key, model=resolved_model, temperature=temperature, max_tokens=max_tokens)
 
     embeddings = _get_embeddings()
     vectorstore = Chroma(

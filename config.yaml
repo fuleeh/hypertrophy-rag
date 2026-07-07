@@ -11,6 +11,7 @@ semantic_scholar:
 
 embedding:
   model: "nomic-embed-text-v1.5"
+  api_url: "https://api.groq.com/openai/v1/embeddings"
 
 llm:
   model: "llama-3.3-70b-versatile"
@@ -20,6 +21,13 @@ llm:
 chroma:
   collection_name: "hypertrophy_papers"
   persist_directory: "data/chroma"
+
+api:
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:3001"
+    - "http://127.0.0.1:3000"
+    - "http://127.0.0.1:3001"
 
 search_queries:
   - name: "hypertrophy_mechanisms"

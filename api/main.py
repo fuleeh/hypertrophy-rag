@@ -18,6 +18,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 load_dotenv(PROJECT_ROOT / ".env")
 
+from hypertrophy_rag.config import get_cors_origins, get_llm, get_vectordb, load_config  # noqa: E402
 from hypertrophy_rag.logging import get_logger  # noqa: E402
 
 logger = get_logger("api")
@@ -26,7 +27,7 @@ app = FastAPI(title="Hypertrophy RAG API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001"],
+    allow_origins=get_cors_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,40 +51,6 @@ async def log_requests(request: Request, call_next):
     return response
 
 
-_vectordb_instance = None
-_config_cache = None
-
-
-def _load_config():
-    global _config_cache
-    if _config_cache is not None:
-        return _config_cache
-    import yaml
-    config_path = PROJECT_ROOT / "config.yaml"
-    _config_cache = yaml.safe_load(config_path.read_text()) if config_path.exists() else {}
-    return _config_cache
-
-
-def _get_vectordb():
-    global _vectordb_instance
-    if _vectordb_instance is not None:
-        return _vectordb_instance
-    from hypertrophy_rag.index.vectordb import VectorDB
-
-    config = _load_config()
-    chroma_config = config.get("chroma", {})
-    _vectordb_instance = VectorDB(
-        collection_name=chroma_config.get("collection_name", "hypertrophy_papers"),
-        persist_directory=str(PROJECT_ROOT / chroma_config.get("persist_directory", "data/chroma")),
-    )
-    return _vectordb_instance
-
-
-def _get_llm():
-    from hypertrophy_rag.retrieval.providers import GroqLLM
-    return GroqLLM()
-
-
 class IngestRequest(BaseModel):
     source: str = "all"
     topic: str | None = None
@@ -100,7 +67,7 @@ def query(
     history: str | None = Query(None, description="JSON array of previous messages"),
 ):
     """Query the RAG system and return a structured research answer."""
-    db = _get_vectordb()
+    db = get_vectordb()
     stats = db.get_stats()
     if stats["total_chunks"] == 0:
         raise HTTPException(status_code=400, detail="No papers indexed yet. Run ingest first.")
@@ -124,11 +91,11 @@ def query(
             )
         elif engine == "agent":
             from hypertrophy_rag.agent.agent import run_agent
-            llm = _get_llm()
+            llm = get_llm()
             result = run_agent(question=question, llm=llm)
         else:
             from hypertrophy_rag.retrieval.rag import query_rag
-            llm = _get_llm()
+            llm = get_llm()
             result = query_rag(
                 question=question,
                 retriever=db,
@@ -190,7 +157,7 @@ def stats():
     """Get index statistics."""
     from hypertrophy_rag.ingestion.parser import load_papers
 
-    db = _get_vectordb()
+    db = get_vectordb()
     index_stats = db.get_stats()
     papers = load_papers(str(PROJECT_ROOT / "data" / "papers"))
 
@@ -295,7 +262,7 @@ def get_paper(paper_id: str):
 @app.get("/api/topics")
 def list_topics():
     """List available ingestion topics."""
-    config = _load_config()
+    config = load_config()
 
     topics = []
     for q in config.get("search_queries", []):
@@ -322,8 +289,8 @@ def ingest(req: IngestRequest):
     from hypertrophy_rag.ingestion.semantic_scholar import ingest_semantic_scholar
     from hypertrophy_rag.retrieval.hybrid import HybridRetriever
 
-    config = _load_config()
-    db = _get_vectordb()
+    config = load_config()
+    db = get_vectordb()
     all_papers = []
 
     t0 = time.perf_counter()
