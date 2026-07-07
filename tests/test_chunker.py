@@ -1,10 +1,10 @@
 """Tests for chunker."""
 
 from hypertrophy_rag.ingestion.chunker import (
+    chunk_paper,
     extract_duration,
     extract_key_findings,
     extract_sample_size,
-    chunk_paper,
 )
 from hypertrophy_rag.models import Paper
 

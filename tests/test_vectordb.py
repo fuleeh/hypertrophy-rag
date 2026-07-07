@@ -1,7 +1,6 @@
 """Tests for vector DB."""
 
 import tempfile
-from pathlib import Path
 
 from hypertrophy_rag.index.vectordb import VectorDB
 from hypertrophy_rag.models import Chunk, Paper

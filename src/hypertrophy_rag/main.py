@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 
 import typer
@@ -337,7 +336,7 @@ def _print_answer(result):
             console.print()
 
     if result.conflicting_findings:
-        console.print(f"[bold yellow]Conflicting Findings:[/bold yellow]")
+        console.print("[bold yellow]Conflicting Findings:[/bold yellow]")
         console.print(f"  {result.conflicting_findings}\n")
 
     console.print(f"[dim]Confidence: {result.confidence}[/dim]")
