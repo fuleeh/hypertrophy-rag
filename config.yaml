@@ -1,0 +1,107 @@
+pubmed:
+  rate_limit_delay: 0.35  # seconds between requests (3 req/s without key)
+  max_papers_per_query: 2000
+  min_abstract_words: 100
+  fetch_batch_size: 100
+
+semantic_scholar:
+  rate_limit_delay: 1.1  # seconds between requests (1 RPS with key)
+  max_papers_per_query: 100  # bulk search limit is 100
+  sort_by: "citationCount:desc"
+
+embedding:
+  model: "nomic-embed-text-v1.5"
+
+llm:
+  model: "llama-3.3-70b-versatile"
+  max_tokens: 2048
+  temperature: 0.3
+
+chroma:
+  collection_name: "hypertrophy_papers"
+  persist_directory: "data/chroma"
+
+search_queries:
+  - name: "hypertrophy_mechanisms"
+    mesh: '"Muscle Hypertrophy"[Mesh] OR "Muscle Development"[Mesh]'
+    text: '("muscle hypertrophy" OR "muscle growth") AND ("resistance training" OR "strength training")'
+    years: "2015:2026"
+
+  - name: "training_volume"
+    mesh: '"Resistance Training"[Mesh]'
+    text: '(volume OR "set count" OR "sets per week") AND hypertrophy'
+    years: "2015:2026"
+
+  - name: "rep_range"
+    text: '(("rep range" OR "repetition range" OR "low rep" OR "high rep") AND hypertrophy) OR ("load spectrum" AND muscle)'
+    years: "2015:2026"
+
+  - name: "training_frequency"
+    text: '(frequency OR "times per week") AND ("resistance training" OR "strength training") AND hypertrophy'
+    years: "2015:2026"
+
+  - name: "protein_intake"
+    mesh: '"Dietary Proteins"[Mesh] AND "Resistance Training"[Mesh]'
+    text: '(protein AND ("muscle protein synthesis" OR hypertrophy OR "muscle growth"))'
+    years: "2015:2026"
+
+  - name: "progressive_overload"
+    text: '("progressive overload" OR "progression" OR "increasing load") AND hypertrophy'
+    years: "2015:2026"
+
+  - name: "eccentric_training"
+    text: '(eccentric AND ("muscle hypertrophy" OR "muscle growth" OR strength))'
+    years: "2015:2026"
+
+  - name: "rest_periods"
+    text: '("rest period" OR "rest interval" OR "inter-set rest") AND ("resistance training" OR hypertrophy)'
+    years: "2015:2026"
+
+  - name: "sleep_recovery"
+    text: '(sleep AND (recovery OR hypertrophy OR "muscle growth" OR "resistance training"))'
+    years: "2015:2026"
+
+  - name: "creatine"
+    text: '(creatine AND ("resistance training" OR hypertrophy OR "muscle"))'
+    years: "2015:2026"
+
+  - name: "metabolic_stress"
+    text: '("metabolic stress" OR "pump" OR "occlusion training" OR "blood flow restriction") AND hypertrophy'
+    years: "2015:2026"
+
+  - name: "mechanical_tension"
+    text: '("mechanical tension" OR "mechanical loading") AND ("muscle hypertrophy" OR "muscle growth")'
+    years: "2015:2026"
+
+  - name: "exercise_selection"
+    text: '("exercise selection" OR "exercise variation" OR "compound" OR "isolation") AND hypertrophy'
+    years: "2015:2026"
+
+  - name: "deload"
+    text: '(deload OR "deloading" OR "recovery week" OR "taper") AND ("resistance training" OR strength OR hypertrophy)'
+    years: "2015:2026"
+
+  - name: "strength_gain"
+    mesh: '"Muscle Strength"[Mesh] AND "Resistance Training"[Mesh]'
+    text: '("strength gain" OR "1RM" OR "maximal strength") AND ("resistance training" OR "strength training")'
+    years: "2015:2026"
+
+  - name: "women_training"
+    text: '(women OR female OR sex-based) AND ("resistance training" OR hypertrophy) AND (sex OR gender)'
+    years: "2015:2026"
+
+  - name: "advanced_training"
+    text: '(advanced OR trained OR "well-trained") AND ("resistance training" OR hypertrophy) AND (volume OR frequency OR periodization)'
+    years: "2015:2026"
+
+semantic_scholar_queries:
+  - "muscle hypertrophy resistance training"
+  - "training volume muscle growth"
+  - "rep range hypertrophy"
+  - "training frequency hypertrophy"
+  - "protein muscle protein synthesis"
+  - "creatine resistance training"
+  - "blood flow restriction hypertrophy"
+  - "eccentric training muscle"
+  - "rest periods resistance training"
+  - "sleep muscle recovery"
