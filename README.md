@@ -13,8 +13,10 @@ RAG agent for hypertrophy research. Searches PubMed and Semantic Scholar for pee
 - **Three retrieval engines** — custom RAG, LangChain LCEL chain, tool-using agent
 - **Hybrid search** — BM25 keyword + semantic similarity with Reciprocal Rank Fusion
 - **Structured citations** — PMID, DOI, citation count, sample size, key findings
-- **Output guardrails** — hallucination detection, confidence calibration
-- **RAGAS evaluation** — faithfulness, relevancy, context precision/recall
+- **Anti-hallucination guardrails** — stat verification against context, confidence calibration, vague claim detection
+- **Clean architecture** — protocols for DI, shared config, DRY prompts
+- **SEO** — sitemap, robots.txt, OpenGraph tags, per-page metadata
+- **CI/CD** — Python lint/test, frontend lint/build, Docker build
 
 ## Tech Stack
 
@@ -104,17 +106,27 @@ Select retrieval engine via `?engine=custom|langchain|agent`.
 
 ```
 hypertrophy-rag/
-├── src/hypertrophy_rag/       # Core Python package
-│   ├── ingestion/             # PubMed + Semantic Scholar pipelines
-│   ├── index/                 # ChromaDB vector store
-│   ├── retrieval/             # RAG, LangChain, hybrid, guardrails
-│   └── agent/                 # Tool-using agent
-├── api/                       # FastAPI backend
-├── web/                       # Next.js frontend
-├── tests/                     # Unit tests
-├── scripts/                   # Evaluation + cron scripts
-├── config.yaml                # Search queries, model settings
-└── data/                      # Cached papers + ChromaDB (gitignored)
+├── src/hypertrophy_rag/           # Core Python package
+│   ├── ingestion/                 # PubMed + Semantic Scholar pipelines
+│   ├── index/                     # ChromaDB vector store
+│   ├── retrieval/                 # RAG, LangChain, hybrid, guardrails
+│   │   ├── base.py                # Protocols (Retriever, LLMProvider, Embedder)
+│   │   ├── prompts.py             # Shared prompts (single source of truth)
+│   │   ├── context.py             # Context building utilities
+│   │   ├── providers.py           # GroqLLM implementing LLMProvider
+│   │   ├── rag.py                 # Core RAG pipeline (DI via protocols)
+│   │   ├── langchain_rag.py       # LangChain LCEL chain
+│   │   ├── hybrid.py              # BM25 + semantic with RRF
+│   │   └── guardrails.py          # Anti-hallucination validation
+│   ├── agent/                     # Tool-using agent
+│   ├── config.py                  # Shared config (load_config, get_vectordb, get_llm)
+│   ├── utils.py                   # Shared utilities (assess_confidence)
+│   └── models.py                  # Paper, Chunk, StudySummary, ResearchAnswer
+├── api/                           # FastAPI backend
+├── web/                           # Next.js frontend
+├── tests/                         # 60+ tests (ruff + pytest)
+├── config.yaml                    # Search queries, model settings
+└── data/                          # Cached papers + ChromaDB (gitignored)
 ```
 
 ## How It Works
@@ -123,9 +135,9 @@ hypertrophy-rag/
 2. **Chunk** — Split abstracts into retrievable units, extract key findings (p-values, effect sizes, sample sizes)
 3. **Embed** — Convert chunks to 768-dimensional vectors via Groq nomic-embed-text
 4. **Index** — Store in ChromaDB with cosine similarity search
-5. **Query** — Embed user question, retrieve top-8 similar chunks
-6. **Generate** — Feed retrieved context to Llama 3.3 70B with citation instructions
-7. **Validate** — Check for hallucinations, confidence calibration, format validation
+5. **Query** — Embed user question, retrieve top-8 similar chunks via hybrid BM25 + semantic search
+6. **Generate** — Feed retrieved context to Llama 3.3 70B with anti-hallucination instructions
+7. **Validate** — Verify statistics against context, calibrate confidence, flag vague claims
 
 ## Cost
 
