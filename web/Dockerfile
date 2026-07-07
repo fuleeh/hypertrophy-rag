@@ -15,7 +15,6 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=deps /app/.next/standalone ./
-COPY --from=deps /app/server.js ./
 COPY --from=deps /app/.next/static ./.next/static
 COPY --from=deps /app/public ./public
 
