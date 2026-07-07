@@ -87,7 +87,7 @@ def query_rag(
         confidence=assess_confidence(answer_text),
     )
 
-    # Apply guardrails validation
-    answer = validate_output(answer)
+    # Apply guardrails validation (pass context for stat verification)
+    answer = validate_output(answer, context=context)
 
     return answer
