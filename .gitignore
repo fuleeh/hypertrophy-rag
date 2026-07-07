@@ -46,6 +46,8 @@ web/out/
 ROADMAP.md
 HOW IT WORKS.md
 AI-ENGINEERING-ROADMAP.md
+AGENTS.md
+CLAUDE.md
 
 # Docker
 .dockerignore

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 import sys
 import time
 from pathlib import Path
@@ -11,7 +10,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 # Add project root to path so we can import the RAG modules
@@ -20,7 +18,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 load_dotenv(PROJECT_ROOT / ".env")
 
-from hypertrophy_rag.logging import get_logger
+from hypertrophy_rag.logging import get_logger  # noqa: E402
 
 logger = get_logger("api")
 
@@ -52,23 +50,33 @@ async def log_requests(request: Request, call_next):
     return response
 
 
-def _get_vectordb():
-    from hypertrophy_rag.index.vectordb import VectorDB
-    import yaml
-
-    config_path = PROJECT_ROOT / "config.yaml"
-    config = yaml.safe_load(config_path.read_text()) if config_path.exists() else {}
-    chroma_config = config.get("chroma", {})
-    return VectorDB(
-        collection_name=chroma_config.get("collection_name", "hypertrophy_papers"),
-        persist_directory=str(PROJECT_ROOT / chroma_config.get("persist_directory", "data/chroma")),
-    )
+_vectordb_instance = None
+_config_cache = None
 
 
 def _load_config():
+    global _config_cache
+    if _config_cache is not None:
+        return _config_cache
     import yaml
     config_path = PROJECT_ROOT / "config.yaml"
-    return yaml.safe_load(config_path.read_text()) if config_path.exists() else {}
+    _config_cache = yaml.safe_load(config_path.read_text()) if config_path.exists() else {}
+    return _config_cache
+
+
+def _get_vectordb():
+    global _vectordb_instance
+    if _vectordb_instance is not None:
+        return _vectordb_instance
+    from hypertrophy_rag.index.vectordb import VectorDB
+
+    config = _load_config()
+    chroma_config = config.get("chroma", {})
+    _vectordb_instance = VectorDB(
+        collection_name=chroma_config.get("collection_name", "hypertrophy_papers"),
+        persist_directory=str(PROJECT_ROOT / chroma_config.get("persist_directory", "data/chroma")),
+    )
+    return _vectordb_instance
 
 
 class IngestRequest(BaseModel):
@@ -123,12 +131,15 @@ def query(
                 history=parsed_history,
             )
     except Exception as e:
-        logger.error(f"RAG query failed: {e}", extra={"extra_data": {"question": question, "error": str(e), "engine": engine}})
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(
+            "RAG query failed",
+            extra={"extra_data": {"question": question, "error": str(e), "engine": engine}},
+        )
+        raise HTTPException(status_code=500, detail="RAG query failed. Check server logs for details.")
 
     rag_duration = (time.perf_counter() - t0) * 1000
     logger.info(
-        f"RAG query completed",
+        "RAG query completed",
         extra={"extra_data": {
             "question": question[:100],
             "top_k": top_k,
@@ -225,7 +236,6 @@ def list_papers(
     # Sort by year descending, then citation count
     paper_list.sort(key=lambda p: (p.year, p.citation_count or 0), reverse=True)
 
-    total = len(paper_list)
     page = paper_list[offset : offset + limit]
 
     return [
@@ -299,18 +309,17 @@ def list_topics():
 @app.post("/api/ingest")
 def ingest(req: IngestRequest):
     """Trigger paper ingestion. Runs synchronously (may take a while)."""
+    from hypertrophy_rag.ingestion.chunker import chunk_papers
     from hypertrophy_rag.ingestion.pubmed import ingest_pubmed
     from hypertrophy_rag.ingestion.semantic_scholar import ingest_semantic_scholar
-    from hypertrophy_rag.ingestion.chunker import chunk_papers
-    from hypertrophy_rag.index.vectordb import VectorDB
-    import yaml
+    from hypertrophy_rag.retrieval.hybrid import HybridRetriever
 
     config = _load_config()
     db = _get_vectordb()
     all_papers = []
 
     t0 = time.perf_counter()
-    logger.info(f"Ingestion started: source={req.source}, topic={req.topic}")
+    logger.info("Ingestion started", extra={"extra_data": {"source": req.source, "topic": req.topic}})
 
     if req.source in ("pubmed", "all"):
         pubmed_config = config.copy()
@@ -330,9 +339,14 @@ def ingest(req: IngestRequest):
     if all_papers:
         chunks = chunk_papers(all_papers)
         indexed = db.index_chunks(chunks)
+        try:
+            hybrid = HybridRetriever()
+            hybrid.invalidate_bm25()
+        except Exception:
+            pass
         duration = time.perf_counter() - t0
         logger.info(
-            f"Ingestion completed",
+            "Ingestion completed",
             extra={"extra_data": {
                 "source": req.source,
                 "topic": req.topic,

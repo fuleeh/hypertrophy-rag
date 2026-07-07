@@ -30,7 +30,7 @@ OFF_TOPIC_PATTERNS = [
 DOI_PATTERN = r"10\.\d{4,}/[^\s]+"
 
 # Valid PMID pattern
-PMID_PATTERN = r"\d{7,8}"
+PMID_PATTERN = r"\d{1,9}"
 
 
 def validate_output(answer: ResearchAnswer) -> ResearchAnswer:
@@ -66,11 +66,3 @@ def validate_output(answer: ResearchAnswer) -> ResearchAnswer:
         answer.conflicting_findings = (answer.conflicting_findings or "") + "\n\nWarnings: " + "; ".join(warnings)
 
     return answer
-
-
-def is_off_topic(question: str) -> bool:
-    """Check if a question is off-topic for hypertrophy research."""
-    for pattern in OFF_TOPIC_PATTERNS:
-        if re.search(pattern, question, re.IGNORECASE):
-            return True
-    return False

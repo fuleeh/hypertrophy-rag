@@ -14,17 +14,23 @@ from hypertrophy_rag.logging import get_logger  # noqa: E402
 
 logger = get_logger("agent.tools")
 
+_cached_vectordb: VectorDB | None = None
+
 
 def get_vectordb() -> VectorDB:
-    """Get the vector database instance."""
+    """Get the cached vector database instance."""
+    global _cached_vectordb
+    if _cached_vectordb is not None:
+        return _cached_vectordb
     import yaml
     config_path = PROJECT_ROOT / "config.yaml"
     config = yaml.safe_load(config_path.read_text()) if config_path.exists() else {}
     chroma_config = config.get("chroma", {})
-    return VectorDB(
+    _cached_vectordb = VectorDB(
         collection_name=chroma_config.get("collection_name", "hypertrophy_papers"),
         persist_directory=str(PROJECT_ROOT / chroma_config.get("persist_directory", "data/chroma")),
     )
+    return _cached_vectordb
 
 
 def search_studies(query: str, top_k: int = 5) -> str:
@@ -55,19 +61,21 @@ def search_studies(query: str, top_k: int = 5) -> str:
     return json.dumps(studies, indent=2)
 
 
+_cached_papers: dict | None = None
+
+
 def get_paper_details(paper_id: str) -> str:
     """Get detailed information about a specific paper by PMID or DOI."""
-    from hypertrophy_rag.ingestion.parser import load_papers
+    global _cached_papers
+    if _cached_papers is None:
+        from hypertrophy_rag.ingestion.parser import load_papers
+        _cached_papers = load_papers(str(PROJECT_ROOT / "data" / "papers"))
 
-    papers = load_papers(str(PROJECT_ROOT / "data" / "papers"))
-
-    # Search by PMID
-    for paper in papers.values():
+    for paper in _cached_papers.values():
         if paper.pmid == paper_id or paper.id == paper_id:
             return json.dumps(paper.to_dict(), indent=2)
 
-    # Search by DOI
-    for paper in papers.values():
+    for paper in _cached_papers.values():
         if paper.doi and paper.doi.lower() == paper_id.lower():
             return json.dumps(paper.to_dict(), indent=2)
 

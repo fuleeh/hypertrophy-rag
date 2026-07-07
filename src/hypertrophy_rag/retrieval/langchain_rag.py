@@ -15,6 +15,7 @@ from langchain_groq import ChatGroq
 
 from hypertrophy_rag.logging import get_logger
 from hypertrophy_rag.models import ResearchAnswer, StudySummary
+from hypertrophy_rag.utils import assess_confidence
 
 logger = get_logger("langchain_rag")
 
@@ -53,38 +54,18 @@ def _get_embeddings():
             self.api_url = "https://api.groq.com/openai/v1/embeddings"
 
         def embed_documents(self, texts: list[str]) -> list[list[float]]:
-            results = []
-            for text in texts:
-                resp = http_requests.post(
-                    self.api_url,
-                    headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
-                    json={"model": self.model, "input": text},
-                )
-                resp.raise_for_status()
-                results.append(resp.json()["data"][0]["embedding"])
-            return results
+            resp = http_requests.post(
+                self.api_url,
+                headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+                json={"model": self.model, "input": texts},
+            )
+            resp.raise_for_status()
+            return [item["embedding"] for item in resp.json()["data"]]
 
         def embed_query(self, text: str) -> list[float]:
             return self.embed_documents([text])[0]
 
     return GroqEmbeddings()
-
-
-def _assess_confidence(answer_text: str) -> str:
-    """Simple heuristic to assess confidence from the answer text."""
-    low_indicators = ["limited evidence", "few studies", "unclear", "insufficient", "mixed evidence"]
-    high_indicators = [
-        "strong evidence", "consistent findings", "meta-analysis",
-        "systematic review", "multiple studies",
-    ]
-    text_lower = answer_text.lower()
-    low_count = sum(1 for ind in low_indicators if ind in text_lower)
-    high_count = sum(1 for ind in high_indicators if ind in text_lower)
-    if low_count > high_count:
-        return "low"
-    elif high_count > low_count:
-        return "high"
-    return "medium"
 
 
 def build_langchain_rag(
@@ -178,7 +159,7 @@ def build_langchain_rag(
             "chain_ms": round(chain_ms, 2),
             "total_ms": round(total_ms, 2),
             "studies_retrieved": len(studies),
-            "confidence": _assess_confidence(answer_text),
+            "confidence": assess_confidence(answer_text),
         }},
     )
 
@@ -186,5 +167,5 @@ def build_langchain_rag(
         question=question,
         answer=answer_text,
         studies=studies,
-        confidence=_assess_confidence(answer_text),
+        confidence=assess_confidence(answer_text),
     )

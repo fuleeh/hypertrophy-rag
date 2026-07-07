@@ -41,6 +41,12 @@ class HybridRetriever:
             self._collection = self._chroma_client.get_collection(self.collection_name)
         return self._collection
 
+    def invalidate_bm25(self):
+        """Reset the BM25 index so it rebuilds on next search call."""
+        self._bm25_index = None
+        self._bm25_docs = []
+        self._bm25_corpus = []
+
     def _build_bm25_index(self):
         """Build BM25 index from ChromaDB documents."""
         if self._bm25_index is not None:

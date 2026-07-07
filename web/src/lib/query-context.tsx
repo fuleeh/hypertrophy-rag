@@ -1,7 +1,9 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 import { queryResearch, type ResearchAnswer, type StudySummary } from "@/lib/api";
+
+const HISTORY_KEY = "hypertrohub-history";
 
 export interface Message {
   role: "user" | "assistant";
@@ -30,6 +32,24 @@ interface QueryContextType extends QueryState {
 
 const QueryContext = createContext<QueryContextType | null>(null);
 
+function loadHistory(): Message[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(history: Message[]) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  } catch {
+    // ignore quota errors
+  }
+}
+
 export function QueryProvider({ children }: { children: ReactNode }) {
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState<ResearchAnswer | null>(null);
@@ -37,7 +57,11 @@ export function QueryProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [year, setYear] = useState<number | undefined>(undefined);
   const [source, setSource] = useState<string | undefined>(undefined);
-  const [history, setHistory] = useState<Message[]>([]);
+  const [history, setHistory] = useState<Message[]>(loadHistory);
+
+  useEffect(() => {
+    saveHistory(history);
+  }, [history]);
 
   const search = useCallback(
     async (q: string) => {
@@ -73,6 +97,7 @@ export function QueryProvider({ children }: { children: ReactNode }) {
     setResult(null);
     setError(null);
     setQuestion("");
+    localStorage.removeItem(HISTORY_KEY);
   }, []);
 
   return (

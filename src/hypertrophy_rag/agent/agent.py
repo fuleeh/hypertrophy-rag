@@ -11,6 +11,7 @@ from groq import Groq
 from hypertrophy_rag.agent.tools import TOOL_MAP, TOOLS
 from hypertrophy_rag.logging import get_logger
 from hypertrophy_rag.models import ResearchAnswer, StudySummary
+from hypertrophy_rag.utils import assess_confidence
 
 logger = get_logger("agent")
 
@@ -137,7 +138,7 @@ def run_agent(
                 question=question,
                 answer=answer_text,
                 studies=studies,
-                confidence=_assess_confidence(answer_text),
+                confidence=assess_confidence(answer_text),
             )
 
         # Process tool calls
@@ -178,20 +179,3 @@ def run_agent(
         ),
         confidence="low",
     )
-
-
-def _assess_confidence(answer_text: str) -> str:
-    """Simple heuristic to assess confidence from the answer text."""
-    low_indicators = ["limited evidence", "few studies", "unclear", "insufficient", "mixed evidence"]
-    high_indicators = [
-        "strong evidence", "consistent findings", "meta-analysis",
-        "systematic review", "multiple studies",
-    ]
-    text_lower = answer_text.lower()
-    low_count = sum(1 for ind in low_indicators if ind in text_lower)
-    high_count = sum(1 for ind in high_indicators if ind in text_lower)
-    if low_count > high_count:
-        return "low"
-    elif high_count > low_count:
-        return "high"
-    return "medium"

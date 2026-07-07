@@ -97,7 +97,11 @@ def fetch_papers(
 def _parse_xml(xml_text: str) -> list[Paper]:
     """Parse PubMed EFetch XML response into Paper objects."""
     papers = []
-    root = ET.fromstring(xml_text)
+    try:
+        root = ET.fromstring(xml_text)
+    except ET.ParseError as e:
+        console.print(f"  [yellow]Warning: Malformed XML response: {e}[/yellow]")
+        return papers
 
     for article in root.findall(".//PubmedArticle"):
         try:
