@@ -61,19 +61,18 @@ export function Features() {
   return (
     <section className="relative z-10 px-6 py-24">
       <div className="mx-auto max-w-5xl">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold md:text-4xl">Built for Science-Based Lifters</h2>
-          <p className="mt-4 text-muted text-lg">Everything you need to find the evidence</p>
-        </div>
+        <div className="font-mono text-sm text-accent mb-4">// features</div>
+        <h2 className="text-3xl font-bold text-text md:text-4xl">Built for science-based lifters</h2>
+        <p className="mt-3 text-text-muted text-lg">Everything you need to find the evidence</p>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
             <Card key={feature.title}>
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20 text-accent">
+              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent">
                 {feature.icon}
               </div>
-              <h3 className="mb-2 text-lg font-bold">{feature.title}</h3>
-              <p className="text-sm text-muted leading-relaxed">{feature.description}</p>
+              <h3 className="text-base font-bold text-text">{feature.title}</h3>
+              <p className="mt-1.5 text-sm text-text-muted leading-relaxed">{feature.description}</p>
             </Card>
           ))}
         </div>

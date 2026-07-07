@@ -7,8 +7,8 @@ const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>
       <input
         ref={ref}
         className={cn(
-          "w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground",
-          "placeholder:text-muted transition-all duration-300",
+          "w-full rounded-lg border border-border/60 bg-surface/60 backdrop-blur-sm px-4 py-3 text-text",
+          "placeholder:text-text-muted transition-all duration-200",
           "hover:border-border-hover focus:border-accent focus:ring-0",
           className
         )}

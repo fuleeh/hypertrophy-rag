@@ -22,45 +22,45 @@ export function AnswerPanel({ result, onFollowUp }: AnswerPanelProps) {
   };
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-6">
+    <div className="rounded-lg border border-border/60 bg-surface/60 backdrop-blur-sm p-6">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold">Research Summary</h2>
+        <div className="font-mono text-xs text-accent">// answer</div>
         <Badge variant={confidenceColors[result.confidence] || "muted"}>
-          Confidence: {result.confidence}
+          {result.confidence}
         </Badge>
       </div>
 
       <div className="prose prose-invert max-w-none">
-        <p className="text-foreground/90 leading-relaxed whitespace-pre-wrap">
+        <p className="text-text-secondary leading-relaxed whitespace-pre-wrap">
           {result.answer}
         </p>
       </div>
 
       {result.conflicting_findings && (
-        <div className="mt-4 rounded-lg border border-warning/30 bg-warning/5 p-4">
+        <div className="mt-4 rounded-lg border border-warning/20 bg-warning/5 p-4">
           <h3 className="mb-1 text-sm font-bold text-warning">Conflicting Findings</h3>
-          <p className="text-sm text-muted">{result.conflicting_findings}</p>
+          <p className="text-sm text-text-muted">{result.conflicting_findings}</p>
         </div>
       )}
 
-      <div className="mt-4 flex items-center gap-4 text-sm text-muted">
+      <div className="mt-4 flex items-center gap-4 font-mono text-xs text-text-muted">
         <span>{result.studies.length} studies found</span>
         {result.studies.some((s) => s.citation_count) && (
           <span>
-            • {result.studies.filter((s) => s.citation_count).length} with citation data
+            · {result.studies.filter((s) => s.citation_count).length} with citation data
           </span>
         )}
       </div>
 
       {onFollowUp && (
         <div className="mt-6 border-t border-border pt-4">
-          <p className="mb-3 text-sm font-medium text-muted">Follow up:</p>
+          <p className="mb-3 font-mono text-xs text-text-muted">follow up</p>
           <div className="flex flex-wrap gap-2">
             {FOLLOW_UP_SUGGESTIONS.map((q) => (
               <button
                 key={q}
                 onClick={() => onFollowUp(q)}
-                className="rounded-lg border border-border bg-surface-hover px-3 py-1.5 text-xs text-foreground/80 transition-colors hover:border-accent hover:text-accent"
+                className="rounded-full border border-border px-3 py-1.5 text-xs text-text-muted transition-colors hover:border-border-hover hover:text-text"
               >
                 {q}
               </button>

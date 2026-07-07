@@ -10,7 +10,6 @@ export function StatsBar() {
     getStats()
       .then(setStats)
       .catch(() => {
-        // API not available, show defaults
         setStats({
           total_papers: 0,
           total_chunks: 0,
@@ -26,20 +25,20 @@ export function StatsBar() {
   }, []);
 
   const items = [
-    { label: "Papers", value: stats?.total_papers?.toLocaleString() || "—" },
-    { label: "Chunks", value: stats?.total_chunks?.toLocaleString() || "—" },
-    { label: "Sources", value: stats ? `${stats.pubmed_count + stats.s2_count}` : "—" },
-    { label: "With DOI", value: stats?.with_doi?.toLocaleString() || "—" },
+    { label: "papers", value: stats?.total_papers?.toLocaleString() || "—" },
+    { label: "chunks", value: stats?.total_chunks?.toLocaleString() || "—" },
+    { label: "sources", value: stats ? `${stats.pubmed_count + stats.s2_count}` : "—" },
+    { label: "with doi", value: stats?.with_doi?.toLocaleString() || "—" },
   ];
 
   return (
-    <section className="relative z-10 border-y border-border bg-surface/50 py-8">
+    <section className="relative z-10 border-y border-border bg-surface/30 py-10">
       <div className="mx-auto max-w-5xl px-6">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {items.map((item) => (
             <div key={item.label} className="text-center">
-              <div className="text-3xl font-bold gradient-text">{item.value}</div>
-              <div className="mt-1 text-sm text-muted">{item.label}</div>
+              <div className="text-3xl font-bold font-mono text-text">{item.value}</div>
+              <div className="mt-1 font-mono text-xs text-text-muted uppercase tracking-wider">{item.label}</div>
             </div>
           ))}
         </div>
