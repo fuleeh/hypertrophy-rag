@@ -79,6 +79,11 @@ def _get_vectordb():
     return _vectordb_instance
 
 
+def _get_llm():
+    from hypertrophy_rag.retrieval.providers import GroqLLM
+    return GroqLLM()
+
+
 class IngestRequest(BaseModel):
     source: str = "all"
     topic: str | None = None
@@ -119,12 +124,15 @@ def query(
             )
         elif engine == "agent":
             from hypertrophy_rag.agent.agent import run_agent
-            result = run_agent(question=question)
+            llm = _get_llm()
+            result = run_agent(question=question, llm=llm)
         else:
             from hypertrophy_rag.retrieval.rag import query_rag
+            llm = _get_llm()
             result = query_rag(
                 question=question,
-                vectordb=db,
+                retriever=db,
+                llm=llm,
                 top_k=top_k,
                 year_filter=year,
                 source_filter=source,

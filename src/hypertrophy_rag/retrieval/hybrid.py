@@ -19,7 +19,10 @@ def _tokenize(text: str) -> list[str]:
 
 
 class HybridRetriever:
-    """BM25 + semantic hybrid retriever with Reciprocal Rank Fusion."""
+    """BM25 + semantic hybrid retriever with Reciprocal Rank Fusion.
+
+    Satisfies the Retriever protocol — can be passed to query_rag().
+    """
 
     def __init__(
         self,
@@ -33,6 +36,16 @@ class HybridRetriever:
         self._bm25_corpus: list[list[str]] = []
         self._chroma_client = None
         self._collection = None
+
+    def search(
+        self,
+        query: str,
+        top_k: int = 10,
+        year_filter: int | None = None,
+        source_filter: str | None = None,
+    ) -> list[dict]:
+        """Satisfy the Retriever protocol. Delegates to hybrid_search."""
+        return self.hybrid_search(query, top_k=top_k)
 
     def _load_chroma(self):
         """Load ChromaDB collection."""

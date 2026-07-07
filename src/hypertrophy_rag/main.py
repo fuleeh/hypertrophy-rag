@@ -41,6 +41,12 @@ def _get_vectordb():
     )
 
 
+def _get_llm():
+    """Initialize the LLM provider."""
+    from hypertrophy_rag.retrieval.providers import GroqLLM
+    return GroqLLM()
+
+
 @app.command()
 def ingest(
     source: str = typer.Option("all", help="Source to ingest: pubmed, semantic-scholar, or all"),
@@ -119,6 +125,7 @@ def query(
     from hypertrophy_rag.retrieval.rag import query_rag
 
     db = _get_vectordb()
+    llm = _get_llm()
 
     stats = db.get_stats()
     if stats["total_chunks"] == 0:
@@ -130,7 +137,8 @@ def query(
 
     result = query_rag(
         question=question,
-        vectordb=db,
+        retriever=db,
+        llm=llm,
         top_k=top_k,
         year_filter=year,
         source_filter=source,

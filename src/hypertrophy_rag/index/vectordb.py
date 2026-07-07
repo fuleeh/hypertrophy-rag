@@ -11,7 +11,10 @@ console = Console()
 
 
 class VectorDB:
-    """ChromaDB wrapper for the hypertrophy paper index."""
+    """ChromaDB wrapper for the hypertrophy paper index.
+
+    Satisfies the Retriever protocol — can be passed to query_rag().
+    """
 
     def __init__(
         self,
